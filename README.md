@@ -6,3 +6,4 @@ Forbedringer.
 
 Der skal ikke kunne edit eller delete på Lejerside
 En udlejer skal kunne se sine egne Listings
+Listings skal have koordinater så de kan vises i Google maps
