@@ -1,6 +1,6 @@
 # Aflevering-3
 
-Car skal skiftes ud med listing men programmet virker
+Car skal skiftes ud med nyt navn, må ikke være list eller listing.... men programmet virker
 
 Forbedringer.
 
