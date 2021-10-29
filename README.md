@@ -1,10 +1,10 @@
 # Aflevering-3
 
-Car skal skiftes ud med nyt navn, må ikke være list eller listing.... men programmet virker
+Der skal ikke kunne edit eller delete på Lejerside medmindre man er creator af listing
 
-Forbedringer.
 
-Der skal ikke kunne edit eller delete på Lejerside
+Når man opretter et room må der meget gerne også være en attribut der indeholder hvem der er ejeren.
+
 
 
   En udlejer skal kunne se sine egne Listings
