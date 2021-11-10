@@ -15,52 +15,52 @@ import {useEffect, useState} from "react";
 const Add_edit_Listing = ({navigation,route}) => {
 
     const initialState = {
-        brand: '',
-        model: '',
-        year: '',
-        licensePlate: ''
+        by: '',
+        postnr: '',
+        kvm2: '',
+        pris: ''
     }
 
-    const [newCar,setNewCar] = useState(initialState);
+    const [newList,setNewList] = useState(initialState);
 
-    /*Returnere true, hvis vi er på edit car*/
-    const isEditCar = route.name === "Edit Car";
+    /*Returnere true, hvis vi er på edit list*/
+    const isEditList = route.name === "Edit List";
 
     useEffect(() => {
-        if(isEditCar){
-            const car = route.params.car[1];
-            setNewCar(car)
+        if(isEditList){
+            const list = route.params.list[1];
+            setNewList(list)
         }
         /*Fjern data, når vi går væk fra screenen*/
         return () => {
-            setNewCar(initialState)
+            setNewList(initialState)
         };
     }, []);
 
     const changeTextInput = (name,event) => {
-        setNewCar({...newCar, [name]: event});
+        setNewList({...newList, [name]: event});
     }
 
     const handleSave = () => {
 
-        const { brand, model, year, licensePlate } = newCar;
+        const { by, postnr, kvm2, pris } = newList;
 
-        if(brand.length === 0 || model.length === 0 || year.length === 0 || licensePlate.length === 0 ){
+        if(by.length === 0 || postnr.length === 0 || kvm2.length === 0 || pris.length === 0 ){
             return Alert.alert('Et af felterne er tomme!');
         }
 
-        if(isEditCar){
-            const id = route.params.car[0];
+        if(isEditList){
+            const id = route.params.list[0];
             try {
                 firebase
                     .database()
-                    .ref(`/Cars/${id}`)
+                    .ref(`/Lists/${id}`)
                     // Vi bruger update, så kun de felter vi angiver, bliver ændret
-                    .update({ brand, model, year, licensePlate });
+                    .update({ by, post: postnr, kvm2, pris });
                 // Når bilen er ændret, går vi tilbage.
                 Alert.alert("Din info er nu opdateret");
-                const car = [id,newCar]
-                navigation.navigate("Car Details",{car});
+                const list = [id,newList]
+                navigation.navigate("Listing Details",{list});
             } catch (error) {
                 console.log(`Error: ${error.message}`);
             }
@@ -70,10 +70,10 @@ const Add_edit_Listing = ({navigation,route}) => {
             try {
                 firebase
                     .database()
-                    .ref('/Cars/')
-                    .push({ brand, model, year, licensePlate });
+                    .ref('/Lists/')
+                    .push({ by, post: postnr, kvm2, pris });
                 Alert.alert(`Saved`);
-                setNewCar(initialState)
+                setNewList(initialState)
             } catch (error) {
                 console.log(`Error: ${error.message}`);
             }
@@ -90,7 +90,7 @@ const Add_edit_Listing = ({navigation,route}) => {
                             <View style={styles.row} key={index}>
                                 <Text style={styles.label}>{key}</Text>
                                 <TextInput
-                                    value={newCar[key]}
+                                    value={newList[key]}
                                     onChangeText={(event) => changeTextInput(key,event)}
                                     style={styles.input}
                                 />
@@ -98,8 +98,8 @@ const Add_edit_Listing = ({navigation,route}) => {
                         )
                     })
                 }
-                {/*Hvis vi er inde på edit car, vis save changes i stedet for add car*/}
-                <Button title={ isEditCar ? "Save changes" : "Add car"} onPress={() => handleSave()} />
+                {/*Hvis vi er inde på edit list, vis save changes i stedet for add list*/}
+                <Button title={ isEditList ? "Save changes" : "Add list"} onPress={() => handleSave()} />
             </ScrollView>
         </SafeAreaView>
     );
