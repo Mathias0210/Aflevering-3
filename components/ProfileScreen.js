@@ -6,46 +6,27 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import LejerSide from "./StackComponent/LejerSide";
-import UdlejerSide from "./StackComponent/UdlejerSide";
 import MinSide from "./StackComponent/MinSide";
-import Add_edit_Listing from "./Add_Edit_Listing";
+import Add_edit_Room from "./Add_edit_Room";
 
 const Tab =createBottomTabNavigator()
 
-const lejerTekst = "Find plads i dit område"
-const udlejerTekst = "Lej din opbevaringsplads ud"
+
 const MinSideTekst = "Dette er informationer om din bruger"
 
 function ProfileScreen () {
 
-    //handleLogout håndterer log ud af en aktiv bruger.
-    //Metoden er en prædefineret metode, som firebase stiller tilrådighed
-    //Metoden er et asynkrontkald.
-    const handleLogOut = async () => {
-        await firebase.auth().signOut();
-    };
 
-    //Hvis der af en eller anden grund ikke skulle være muligt at fremfinde den aktive bruger,
-    //skal der udprintes en besked om dette igennem en tekstkomponent
+
+    //Hvis der ikke kan fremfindes data returneres blot en lille tekst
+    //Dette bør dog ikke ske da der er lavet fejlhåndtering i loginForm.js
     if (!firebase.auth().currentUser) {
-        return <View><Text>Not found</Text></View>;
+        return <View><Text>No users found</Text></View>;
     }
 
-    //I return() udnyttes en prædefineret metode, som firebase stiller til rådighed.
-    // Metoden returnerer mailadressen af den aktive bruger.
-    // Mailadressen udskrives ved brug af en tekstkomponent.
-    //Her kan man returnere en velkomst skærm til en bruger der er logget ind
-    //Indsæt komponenter til lejer og udlejer
-    /*
-    return (
+    //her returneres "startsiden" som brugeren præsenteres for i form af en navigationcontainer der indeholder
+    // en tab navigator der er linket op til forskellige screens på stinavn
 
-        <View style={styles.container} >
-            <Text>Current user: {firebase.auth().currentUser.email}</Text>
-            <Button onPress={() => handleLogOut()} title="Log out" />
-        </View>
-
-         */
     return (
         <NavigationContainer>
             <Tab.Navigator screenOptions={({ route }) => ({
@@ -84,7 +65,7 @@ function ProfileScreen () {
                            }}
             >
                 <Tab.Screen name="Lejer" component={StackNavigator}/>
-                <Tab.Screen name={'Bliv Udlejer'} component={Add_edit_Listing}/>
+                <Tab.Screen name={'Bliv Udlejer'} component={Add_edit_Room}/>
                 <Tab.Screen name="Min Side" children={()=><MinSide prop={MinSideTekst}/>}/>
             </Tab.Navigator>
         </NavigationContainer>
@@ -92,7 +73,9 @@ function ProfileScreen () {
 
 }
 
-//Lokal styling til brug i ProfileScreen
+export default ProfileScreen
+
+//ikke benyttet styling
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -102,6 +85,3 @@ const styles = StyleSheet.create({
         padding: 8,
     },
 });
-
-//Eksport af Loginform, således denne kan importeres og benyttes i andre komponenter
-export default ProfileScreen

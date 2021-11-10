@@ -10,10 +10,15 @@ import firebase from "firebase/compat";
 * Slutteligt er der inkluderet styling til komponenterne
  */
 function MinSide({prop}) {
+
+    const handleLogOut = async () => {
+        await firebase.auth().signOut();
+    };
     return (
         <View style={styles.container}>
             <Text style={styles.text}>{prop}</Text>
             <Text>Din Mail: {firebase.auth().currentUser.email}</Text>
+            <Button title={"Log ud"} onPress={()=> handleLogOut()}/>
         </View>
     );
 }
@@ -24,12 +29,11 @@ export default MinSide
 //Lokal styling til brug i ScreenOne
 const styles = StyleSheet.create({
     container: {
-        borderColor: 'red',
         borderWidth: 20,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'rgb(80, 220, 110)',
     },
     text: {
         fontSize: 20,

@@ -12,68 +12,72 @@ import {
 import firebase from 'firebase/compat';
 import {useEffect, useState} from "react";
 
-const Add_edit_Listing = ({navigation,route}) => {
+const Add_edit_Room = ({navigation,route}) => {
 
+    //Foreløbige attributter, skal udvides
     const initialState = {
         by: '',
         postnr: '',
         kvm2: '',
-        pris: ''
+        pris: '',
+        rumtype: "",
     }
 
-    const [newList,setNewList] = useState(initialState);
+    const [newRoom,setNewRoom] = useState(initialState);
 
     /*Returnere true, hvis vi er på edit list*/
-    const isEditList = route.name === "Edit List";
+    const isEditRoom = route.name === "Edit Room";
 
     useEffect(() => {
-        if(isEditList){
-            const list = route.params.list[1];
-            setNewList(list)
+        if(isEditRoom){
+            const room = route.params.room[1];
+            setNewRoom(room)
         }
-        /*Fjern data, når vi går væk fra screenen*/
+        /*Data sættes til initialState dvs. data fjernes*/
         return () => {
-            setNewList(initialState)
+            setNewRoom(initialState)
         };
     }, []);
 
     const changeTextInput = (name,event) => {
-        setNewList({...newList, [name]: event});
+        setNewRoom({...newRoom, [name]: event});
     }
 
+    //funktion der håndterer lagring
     const handleSave = () => {
 
-        const { by, postnr, kvm2, pris } = newList;
+        const { by, postnr, kvm2, pris, rumtype } = newRoom;
 
-        if(by.length === 0 || postnr.length === 0 || kvm2.length === 0 || pris.length === 0 ){
+        if(by.length === 0 || postnr.length === 0 || kvm2.length === 0 || pris.length === 0 || rumtype.length === 0 ){
             return Alert.alert('Et af felterne er tomme!');
         }
 
-        if(isEditList){
-            const id = route.params.list[0];
+        if(isEditRoom){
+            const id = route.params.room[0];
             try {
                 firebase
                     .database()
-                    .ref(`/Lists/${id}`)
+                    .ref(`/Rooms/${id}`)
                     // Vi bruger update, så kun de felter vi angiver, bliver ændret
-                    .update({ by, post: postnr, kvm2, pris });
+                    .update({ by, postnr, kvm2, pris, rumtype });
                 // Når bilen er ændret, går vi tilbage.
                 Alert.alert("Din info er nu opdateret");
-                const list = [id,newList]
-                navigation.navigate("Listing Details",{list});
+                const room = [id,newRoom]
+                navigation.navigate("Room Details",{room});
             } catch (error) {
                 console.log(`Error: ${error.message}`);
             }
 
         }else{
 
+            //pusher det nyligt opdaterede data i firebase
             try {
                 firebase
                     .database()
-                    .ref('/Lists/')
-                    .push({ by, post: postnr, kvm2, pris });
+                    .ref('/Rooms/')
+                    .push({ by, postnr, kvm2, pris, rumtype });
                 Alert.alert(`Saved`);
-                setNewList(initialState)
+                setNewRoom(initialState)
             } catch (error) {
                 console.log(`Error: ${error.message}`);
             }
@@ -90,7 +94,7 @@ const Add_edit_Listing = ({navigation,route}) => {
                             <View style={styles.row} key={index}>
                                 <Text style={styles.label}>{key}</Text>
                                 <TextInput
-                                    value={newList[key]}
+                                    value={newRoom[key]}
                                     onChangeText={(event) => changeTextInput(key,event)}
                                     style={styles.input}
                                 />
@@ -98,14 +102,14 @@ const Add_edit_Listing = ({navigation,route}) => {
                         )
                     })
                 }
-                {/*Hvis vi er inde på edit list, vis save changes i stedet for add list*/}
-                <Button title={ isEditList ? "Save changes" : "Add list"} onPress={() => handleSave()} />
+                {/*Hvis vi er inde på edit list, vis save changes i stedet for add room*/}
+                <Button title={ isEditRoom ? "Save changes" : "Add room"} onPress={() => handleSave()} />
             </ScrollView>
         </SafeAreaView>
     );
 }
 
-export default Add_edit_Listing;
+export default Add_edit_Room;
 
 const styles = StyleSheet.create({
     container: {

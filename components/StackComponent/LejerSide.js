@@ -14,7 +14,7 @@ const navController = (navigation, route) => {navigation.navigate(route)}
 function LejerSide({navigation}) {
     return (
         <View style={styles.container}>
-            <Text>Tekst</Text>
+            <Text>Find opbevaring idag!</Text>
             <Button title="Find lejemål i dit område" onPress={()=>navController(navigation,"Map")}></Button>
             <Button title="Se en liste af lejemål" onPress={()=>navController(navigation,"UdlejerSide")}></Button>
         </View>
@@ -30,12 +30,11 @@ export default LejerSide
 //Lokal styling til brug i ScreenOne
 const styles = StyleSheet.create({
     container: {
-        borderColor: 'red',
         borderWidth: 20,
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(80, 220, 110)',
     },
     text: {
         fontSize: 20,

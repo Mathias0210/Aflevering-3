@@ -5,29 +5,29 @@ import firebase from 'firebase/compat';
 import {useEffect, useState} from "react";
 
 const ListingDetails = ({route,navigation}) => {
-    const [car,setCar] = useState({});
+    const [room,setRooms] = useState({});
 
     useEffect(() => {
-        /*Henter car values og sætter dem*/
-        setCar(route.params.car[1]);
+        /*Henter room values og sætter dem*/
+        setRooms(route.params.room[1]);
 
         /*Når vi forlader screen, tøm object*/
         return () => {
-            setCar({})
+            setRooms({})
         }
     });
 
     const handleEdit = () => {
-        // Vi navigerer videre til EditCar skærmen og sender bilen videre med
-        const car = route.params.car
-        navigation.navigate('Edit Car', { car });
+        // navigerer videre til EditRoom og sender rummet med
+        const room = route.params.room
+        navigation.navigate('Edit Room', { room });
     };
 
-    // Vi spørger brugeren om han er sikker
+    // Pop-up for at brugeren kan bekræfte slettelse
     const confirmDelete = () => {
         /*Er det mobile?*/
         if(Platform.OS ==='ios' || Platform.OS ==='android'){
-            Alert.alert('Are you sure?', 'Do you want to delete the car?', [
+            Alert.alert('Are you sure?', 'Do you want to delete the room?', [
                 { text: 'Cancel', style: 'cancel' },
                 // Vi bruger this.handleDelete som eventHandler til onPress
                 { text: 'Delete', style: 'destructive', onPress: () => handleDelete() },
@@ -35,40 +35,41 @@ const ListingDetails = ({route,navigation}) => {
         }
     };
 
-    // Vi sletter den aktuelle bil
+    // Sletter rummet man er inde på
     const  handleDelete = () => {
-        const id = route.params.car[0];
+        const id = route.params.room[0];
         try {
             firebase
                 .database()
-                // Vi sætter bilens ID ind i stien
-                .ref(`/Cars/${id}`)
-                // Og fjerner data fra den sti
+                // Rummets ID benyttes for at finde det i firebase
+                .ref(`/Rooms/${id}`)
+                // fjerner data fra Rooms-stien
                 .remove();
-            // Og går tilbage når det er udført
+            // Returnerer
             navigation.goBack();
         } catch (error) {
             Alert.alert(error.message);
         }
     };
 
-
-    if (!car) {
+    //Evalueres room til false findes der intet data endnu
+    if (!room) {
         return <Text>No data</Text>;
     }
 
-    //all content
+    //Fremviser edit og delete knapper
     return (
         <View style={styles.container}>
             <Button title="Edit" onPress={ () => handleEdit()} />
             <Button title="Delete" onPress={() => confirmDelete()} />
             {
-                Object.entries(car).map((item,index)=>{
+                //
+                Object.entries(room).map((item,index)=>{
                     return(
                         <View style={styles.row} key={index}>
-                            {/*Vores car keys navn*/}
+                            {/*Vores room keys navn*/}
                             <Text style={styles.label}>{item[0]} </Text>
-                            {/*Vores car values navne */}
+                            {/*Vores room values navne */}
                             <Text style={styles.value}>{item[1]}</Text>
                         </View>
                     )

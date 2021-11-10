@@ -15,12 +15,10 @@ function MapPage() {
     const [selectedCoordinate, setSelectedCoordinate] = useState(null)
     const [selectedAddress, setSelectedAddress] = useState(null)
 
-    /*
-    * getLocationPermission udnytter den prædefinerede asynkrone metode requestForegroundPermissionsAsync,
-    * som aktiverer en forespørgsel om tilladelse til at benytte enhedens position
-    * resultatet af denne handling leveres og benyttes til at sætte værdien af locationPermission
-    * Værdien sættes pba. af værdien item.granted
-    */
+
+    //Der er importeret Location fra pakken expo-location
+    //Her benyttes en prædefineret metode fra denne pakke som anmoder om tilladelse til at bruge enheds lokation
+    //Resultatet benyttes til at sette hasLocationPermission til item.granted
     const getLocationPermission = async () => {
         await Location.requestForegroundPermissionsAsync().then((item)=>{
             setlocationPermission(item.granted)
@@ -28,38 +26,34 @@ function MapPage() {
 
     };
 
-    // I useEffect kaldes getlocationPermission, der sikrer at enheden forespørger tilladelse
-    // så snart appen kører
+
+    // Når appen startes kaldes getLocationPermission for at sikre at enheden spørger om tilladelse til lokation
     useEffect (() => {
         const response = getLocationPermission()
     });
 
-    /*
-    * Metoden updateLocation udnytter det prædefinerede asynkrone kald, getCurrentPositionAsync, returnerer enhedens aktuelle position
-    * Resultatet fra kaldet benyttes til at fastsætte værdien af currentlokation.
-    * argumentet, Accuracy.Balanced, angiver den nøjagtighed vi ønsker skal bruges til at angive positionen.
-      */
+
+    //Igen kaldes en prædefineret metode fra expo-location, denne gang for at finde enhedens aktuelle lokation
+    //currentPosition sættes til item.coords
     const updateLocation = async () => {
         await Location.getCurrentPositionAsync({accuracy: Accuracy.Balanced}).then((item)=>{
             setCurrentLocation(item.coords)
         } );
     };
-    /*
-    * Metoden handleLongPress tager en event med som argument og henter værdien af et koordinatsæt fra denne
-    * Værdien gemmes i en variabel, der tilføjes til et array af koordinater.
-    */
+
+
+    // Metoden benyttes i mapView til at sætte en markør ved et længerevarende tryk på skærmen
+    // En konstant sættes ud fra en event der indeholder koordinater
+    // Denne konstant gemmes derefter i et array af koordinater
     const handleLongPress = event => {
         const coordinate = event.nativeEvent.coordinate
         setUserMarkerCoordinates((oldArray) => [...oldArray, coordinate])
     };
 
-    /*
-  * Metoden handleSelectMarker tager en koordinat med som argument. Kordinaten bruges
-  * til at sætte værdien af selectedCoordinat-variablen
-  * Dernæst aktiveres et asynkront kald, i form af den prædefinerede metode, reverseGeocodeAsync.
-  * reverseGeocodeAsync omsætter koordinatsættet til en række data, herunder område- og adresse data.
-  * selectedAdress sættes til at være resultatet af det asynkrone kald
-  */
+
+    // Metoden her benytter koorinater som et argument i funktionen
+    // SetelectedCoordinate funktionen sættes til coordinate og derefter omsættes coordinate vha.
+    // Prædefineret metode til at hente data om koordinatet så det kan vises når man trykker
     const handleSelectMarker = async coordinate =>{
         setSelectedCoordinate(coordinate)
         await Location.reverseGeocodeAsync(coordinate).then((data) => {
@@ -69,15 +63,15 @@ function MapPage() {
     };
 
 
-    //Metoden closeInfoBox nulstiller værdienne fro selectedAddress og selectedCoordinate
+    //closeInfoBox sætter selectedAddress og selectedCoordinate til null
     const closeInfoBox = () =>
         setSelectedCoordinate(null) && setSelectedAddress(null)
 
-    // RenderCurrentLocation tager props med som argument og tjekker om, der er givet adgang til enhedens lokationsdata
-    // Er der ikke givet adgang returneres der en tekstkomponent med instruktioner til brugeren
-    //Er der givet tilladelse og currenLocation ikke har en værdi, vil der fremvises en knap komponent
-    //Er der givet tilladelse go currentlokation har en værdi, vil lokationsdata blive udskrvet i en infoboks
+
+    //Metoden her tager props som argument og if statements evaluerer derefter forløbet
+    // Såfremt alt er OK, fremvises en knap der kalder updateLocation og fremviser enhednes nuærende lokation
     const RenderCurrentLocation = (props) => {
+
         if (props.hasLocationPermission === null) {
             return null;
         }
@@ -109,6 +103,11 @@ function MapPage() {
     * hvorved selectedCoordinate og selectedAddres får en værdi og der udskrives data om den vaælgte markør
     *
     */
+
+    // Safeareaview: https://reactnative.dev/docs/safeareaview
+    // safeareaview bruges til at neste en del komponenter, renderCurrentLocation buges til at vise den blå "prik" med enheds lokation
+    // Mapview generer et map vha. attributterne der er udfyldt
+    //Derudover der der hardcoded 3 markers som på sigt kan bygges sammen med resten af appens funktioner
     {
         return (
             <SafeAreaView style={styles.container}>
@@ -119,19 +118,19 @@ function MapPage() {
                     showsUserLocation
                     onLongPress={handleLongPress}>
                     <Marker
-                        coordinate={{ latitude: 55.676195, longitude: 12.569419 }}
-                        title="Rådhuspladsen"
-                        description="blablabal"
+                        coordinate={{ latitude: 55.67287733975346, longitude: 12.619213349095386 }}
+                        title="Sportsklub"
+                        description="Kælderrum"
                     />
                     <Marker
-                        coordinate={{ latitude: 55.673035, longitude: 12.568756 }}
-                        title="Tivoli"
-                        description="blablabal"
+                        coordinate={{ latitude: 55.65173596100685, longitude: 12.561854340423828 }}
+                        title="Nokken"
+                        description="Loft"
                     />
                     <Marker
-                        coordinate={{ latitude: 55.674082, longitude: 12.598108 }}
-                        title="Christiania"
-                        description="blablabal"
+                        coordinate={{ latitude: 55.65941276824648, longitude: 12.604998158773094 }}
+                        title="Garage på Amagerbro"
+                        description="Garage"
                     />
                     {userMarkerCoordinates.map((coordinate, index) => (
                         <Marker
@@ -157,6 +156,8 @@ function MapPage() {
     }
 }
 
+export default MapPage
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -181,4 +182,3 @@ const styles = StyleSheet.create({
         fontSize: 15,
     },
 });
-export default MapPage

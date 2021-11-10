@@ -3,7 +3,7 @@ import {View, Text, FlatList, TouchableOpacity, StyleSheet, Button} from 'react-
 import firebase from 'firebase/compat';
 import {useEffect, useState} from "react";
 import {createStackNavigator} from "@react-navigation/stack";
-import Add_edit_Listing from "../Add_Edit_Listing";
+import Add_edit_Room from "../Add_edit_Room";
 import {NavigationContainer} from "@react-navigation/native";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 
@@ -11,44 +11,46 @@ const navController = (navigation, route) => {navigation.navigate(route)}
 
 const UdlejerSide = ({navigation}) => {
 
-    const [cars,setCars] = useState()
+    const [rooms,setRooms] = useState()
+
 
     useEffect(() => {
-        if(!cars) {
+        if(!rooms) {
             firebase
                 .database()
-                .ref('/Cars')
+                //Kan kun få det til at fungere med Lists som ref
+                .ref('/Rooms')
                 .on('value', snapshot => {
-                    setCars(snapshot.val())
+                    setRooms(snapshot.val())
                 });
         }
     },[]);
 
     // Vi viser ingenting hvis der ikke er data
-    if (!cars) {
+    if (!rooms) {
         return <Text>Loading...</Text>;
     }
 
-    const handleSelectCar = id => {
+    const handleSelectList = id => {
         /*Her søger vi direkte i vores array af biler og finder bil objektet som matcher idet vi har tilsendt*/
-        const car = Object.entries(cars).find( car => car[0] === id /*id*/)
-        navigation.navigate('Listing Details', { car });
+        const room = Object.entries(rooms).find(room => room[0] === id /*id*/)
+        navigation.navigate('Room Details', { room });
     };
 
-    // Flatlist forventer et array. Derfor tager vi alle values fra vores cars objekt, og bruger som array til listen
-    const carArray = Object.values(cars);
-    const carKeys = Object.keys(cars);
+    // Flatlist forventer et array. Derfor tager vi alle values fra vores rooms objekt, og bruger som array til listen
+    const listArray = Object.values(rooms);
+    const roomKeys = Object.keys(rooms);
 
     return (
         <FlatList
-            data={carArray}
-            // Vi bruger carKeys til at finde ID på den aktuelle bil og returnerer dette som key, og giver det med som ID til CarListItem
-            keyExtractor={(item, index) => carKeys[index]}
+            data={listArray}
+            // Vi bruger roomKeys til at finde ID på den aktuelle bil og returnerer dette som key, og giver det med som ID til ListListItem
+            keyExtractor={(item, index) => roomKeys[index]}
             renderItem={({ item, index }) => {
                 return(
-                    <TouchableOpacity style={styles.container} onPress={() => handleSelectCar(carKeys[index])}>
+                    <TouchableOpacity style={styles.container} onPress={() => handleSelectList(roomKeys[index])}>
                         <Text>
-                            {item.brand} {item.model}
+                            {item.by} {item.rumtype} {item.pris} DKK/md
                         </Text>
                     </TouchableOpacity>
                 )

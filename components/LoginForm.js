@@ -16,12 +16,8 @@ function LoginForm() {
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState(null)
 
-    /*
-    * Metoden herunder håndterer login af en eksisterende bruger ved at anvende den prædefinerede metode, som stilles til rådighed af firebase
-    * signInWithEmailAndPassword tager en mail og et password med som argumenter og foretager et asynkront kald, der eksekverer login i firebase
-    * Opstår der fejl under forsøget på login, vil der i catch blive fremsat en fejlbesked, som, ved brug af
-    * setErrorMessage, angiver værdien for state-variablen, errormessage
-    */
+
+    //Metode benytter prædefineret firebase metoder i en try catch block der håndterer etvt. fejl
     const handleSubmit = async () => {
         try {
             await firebase.auth().signInWithEmailAndPassword(email, password).then((data)=>{
@@ -32,17 +28,17 @@ function LoginForm() {
         }
     }
 
-    //Her defineres loginknappen, som aktiverer handleSubmit igennem onPress
+    //Login knap: handleSubmit() aktiveres ved onPress
     const renderButton = () => {
         return <Button onPress={() => handleSubmit()} title="Login" />;
     };
 
-//I return oprettes en tekstkomponent, der angiver at dette er loginfrom
-//Dernæst er der to inputfelter, som løbeende sætter værdien af state-variablerne, mail og password.
-// Afslutningsvis, angives det at, hvis errorMessage får fastsat en værdi, skal denne udskrives i en tekstkomponent.
+
+    // Text komponent oprettes til håndtering af login med email og password
+    //Der er indbygget en errorMessage med conditional rendering til sidst i return()
     return (
         <View>
-            <Text style={styles.header}>Login up</Text>
+            <Text style={styles.header}>Login</Text>
             <TextInput
                 placeholder="email"
                 value={email}
@@ -64,7 +60,7 @@ function LoginForm() {
     );
 }
 
-//Lokal styling til brug i LoginFrom
+//Styling
 const styles = StyleSheet.create({
     error: {
         color: 'red',
@@ -79,5 +75,4 @@ const styles = StyleSheet.create({
     },
 });
 
-//Eksport af Loginform, således denne kan importeres og benyttes i andre komponenter
 export default LoginForm
