@@ -14,9 +14,22 @@ const navController = (navigation, route) => {navigation.navigate(route)}
 function LejerSide({navigation}) {
     return (
         <View style={styles.container}>
-            <Text>Find opbevaring idag!</Text>
-            <Button title="Find lejemål i dit område" onPress={()=>navController(navigation,"Map")}></Button>
-            <Button title="Se en liste af lejemål" onPress={()=>navController(navigation,"UdlejerSide")}></Button>
+            <Text style={styles.text}>Find opbevaring idag!</Text>
+            <Button
+                style= {styles.ButtonS}
+             color= '#000000'
+             title="Find lejemål i dit område"
+             onPress={()=>navController(navigation,"Map")}
+             >
+            
+             </Button>
+             {/* Mellemrum mellem knapperne */}
+             <Text></Text>
+            <Button 
+            color= '#000000'
+            title="Se en liste af lejemål" 
+            onPress={()=>navController(navigation,"UdlejerSide")}>
+            </Button>
         </View>
     );
 
@@ -38,6 +51,9 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 20,
+        hieght: 100,
+        marginBottom: 200,
+        color: 'red'
     },
     map: { flex: 1 },
     infoBox: {
@@ -54,4 +70,11 @@ const styles = StyleSheet.create({
     infoText: {
         fontSize: 15,
     },
+    ButtonS: {
+        height: 50,
+        width: 20,
+        marginVertical: 10,
+        marginBottom: 20,
+    },
+
 });

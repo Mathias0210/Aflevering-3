@@ -17,8 +17,12 @@ function MinSide({prop}) {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>{prop}</Text>
+            <Text></Text>
             <Text>Din Mail: {firebase.auth().currentUser.email}</Text>
-            <Button title={"Log ud"} onPress={()=> handleLogOut()}/>
+            <Text></Text>
+            <Button 
+            color='#000000'
+            title={"Log ud"} onPress={()=> handleLogOut()}/>
         </View>
     );
 }
@@ -33,7 +37,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgb(80, 220, 110)',
+        backgroundColor: '#6495ed',
     },
     text: {
         fontSize: 20,

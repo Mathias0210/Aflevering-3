@@ -11,6 +11,9 @@ import {
 } from 'react-native';
 import firebase from 'firebase/compat';
 import {useEffect, useState} from "react";
+// import cameraComponent from './camara';
+
+const navController = (navigation, route) => {navigation.navigate(route)}
 
 const Add_edit_Room = ({navigation,route}) => {
 
@@ -22,7 +25,7 @@ const Add_edit_Room = ({navigation,route}) => {
         pris: '',
         rumtype: "",
     }
-
+ 
     const [newRoom,setNewRoom] = useState(initialState);
 
     /*Returnere true, hvis vi er på edit list*/
@@ -89,6 +92,7 @@ const Add_edit_Room = ({navigation,route}) => {
         <SafeAreaView style={styles.container}>
             <ScrollView>
                 {
+                    
                     Object.keys(initialState).map((key,index) =>{
                         return(
                             <View style={styles.row} key={index}>
@@ -98,12 +102,21 @@ const Add_edit_Room = ({navigation,route}) => {
                                     onChangeText={(event) => changeTextInput(key,event)}
                                     style={styles.input}
                                 />
+                               
                             </View>
                         )
                     })
                 }
                 {/*Hvis vi er inde på edit list, vis save changes i stedet for add room*/}
-                <Button title={ isEditRoom ? "Save changes" : "Add room"} onPress={() => handleSave()} />
+                <Button
+                color='#000000'
+                 title={ isEditRoom ? "Save changes" : "Add room"} onPress={() => handleSave()} />
+                <Text></Text>
+                <Button 
+                color='#000000'
+                 title="Tilføj billede af rummet"
+                onPress={()=>navController(navigation,"Kamera")}
+                ></Button>
             </ScrollView>
         </SafeAreaView>
     );
